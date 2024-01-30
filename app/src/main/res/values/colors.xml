@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="sage">#D9EDBF</color>
+    <color name="peach">#FFB996</color>
+    <color name="dark_peach">#FF8080</color>
+    <color name="brown">#4F4A45</color>
+    <color name="grey">#4c4c4c</color>
+    <color name="light_grey">#D3D3D3</color>
+    <color name="green">#CDFAD5</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#262626</color>
+    <color name="orange">#FFCF96</color>
+    <color name="lemon">#FDFFAB</color>
+</resources>
