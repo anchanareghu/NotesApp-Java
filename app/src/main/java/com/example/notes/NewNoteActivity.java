@@ -27,7 +27,6 @@ public class NewNoteActivity extends Activity {
         back_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View backButton) {
-                saveNote();
                 Intent intent = new Intent(backButton.getContext(), MainActivity.class);
                 startActivity(intent);
             }
@@ -58,6 +57,13 @@ public class NewNoteActivity extends Activity {
         finish();
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        saveNote();
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
 }
 
 

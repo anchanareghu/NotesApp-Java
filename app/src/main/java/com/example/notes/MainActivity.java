@@ -7,7 +7,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.SearchView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
@@ -16,6 +21,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -32,13 +38,13 @@ public class MainActivity extends Activity {
         View add_note = findViewById(R.id.add_button);
         View add_image = findViewById(R.id.add_image);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-
-        adapter = new RecyclerViewAdapter(notesList);
+        adapter = new RecyclerViewAdapter(notesList, this);
         recyclerView.setAdapter(adapter);
 
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
 
+        SearchView searchView = findViewById(R.id.search_notes);
 
 
         add_note.setOnClickListener(new View.OnClickListener() {
@@ -53,6 +59,7 @@ public class MainActivity extends Activity {
 
     }
 
+
     private void loadNotes() {
         SharedPreferences preferences = getSharedPreferences("MyNotesPrefs", MODE_PRIVATE);
         Set<String> defaultSet = new HashSet<>();
@@ -64,10 +71,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        // Reload notes when returning to MainActivity
         loadNotes();
         adapter.updateData(notesList, titleList);
-
     }
-
 }

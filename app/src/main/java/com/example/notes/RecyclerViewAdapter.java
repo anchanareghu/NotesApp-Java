@@ -1,5 +1,6 @@
 package com.example.notes;
 
+import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,12 +12,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewViewHolder> {
-    private ArrayList<String> notesList;
-    private ArrayList<String> titleList;
+    ArrayList<String> notesList;
+    ArrayList<String> titleList;
+
+    Context context;
 
 
-    public RecyclerViewAdapter(ArrayList<String> notesList) {
+    public RecyclerViewAdapter(ArrayList<String> notesList, Context context) {
         this.notesList = notesList;
+        this.context = context;
     }
 
     public void updateData(ArrayList<String> newNotesList, ArrayList<String> newTitleList) {
@@ -41,11 +45,22 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewViewHo
             holder.titleTextView.setText(noteParts[0]);
             holder.notesTextView.setText(noteParts[1]);
         } else {
-            // If there's no title, display the entire note as the content
             holder.titleTextView.setText("");
             holder.notesTextView.setText(noteParts[0]);
         }
 
+        String title = noteParts[0];
+        String note = noteParts[1];
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Handle click event here
+                Intent intent = new Intent(context, NotesDetailActivity.class);
+                intent.putExtra("note_title", title);
+                intent.putExtra("note_content", note);
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -53,5 +68,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewViewHo
         return notesList.size();
     }
 }
+
+
 
 
