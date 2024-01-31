@@ -13,7 +13,7 @@ The Notes App is a simple Android application that allows users to create, view 
 
 ### Screenshots
 
-![](app/main/res/drawable/screenshot01.png)
+![](app/src/main/res/drawable/screenshot01.png)
 
 ### Usage
 
