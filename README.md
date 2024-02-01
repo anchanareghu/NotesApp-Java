@@ -13,14 +13,13 @@ The Notes App is a simple Android application that allows users to create, view 
 
 ### Screenshots
 
-![](app/src/main/res/drawable/screenshot01.png)
+![](app/src/main/res/drawable/screenshot01.jpg)
 
 ### Usage
 
 1. **Create a New Note**: Click on the "+" icon to create a new note. Enter the title and content of the note, then save it.
 2. **View Note Details**: Click on a note in the list to view its details, including the title and content.
-3. **Search for Notes**: Use the search bar at the top to search for specific notes by typing keywords.
-4. **Save Notes**: Notes are automatically saved when created or updated. They persist even if the app is closed or restarted.
+3. **Save Notes**: Notes are automatically saved when created or updated. They persist even if the app is closed or restarted.
 
 ### Dependencies
 
