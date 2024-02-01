@@ -12,8 +12,7 @@ The Notes App is a simple Android application that allows users to create, view 
 4. **Simple User Interface**: The app provides a user-friendly interface for managing notes.
 
 ### Screenshots
-
-![](app/src/main/res/drawable/screenshot01.jpg)
+<img src="app/src/main/res/drawable/screenshot01.PNG" width="200" />
 
 ### Usage
 
