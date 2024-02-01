@@ -1,28 +1,18 @@
 package com.example.notes;
 
-
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.SearchView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
-import androidx.collection.ArraySet;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 
@@ -45,7 +35,6 @@ public class MainActivity extends Activity {
         recyclerView.setLayoutManager(layoutManager);
 
 
-
         add_note.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View add_view) {
@@ -53,7 +42,6 @@ public class MainActivity extends Activity {
                 startActivity(intent);
             }
         });
-
 
 
         SearchView searchView = (SearchView) findViewById(R.id.search_notes);

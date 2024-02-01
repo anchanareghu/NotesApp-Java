@@ -1,7 +1,5 @@
 package com.example.notes;
 
-import static android.app.PendingIntent.getActivity;
-
 import android.view.View;
 import android.widget.TextView;
 

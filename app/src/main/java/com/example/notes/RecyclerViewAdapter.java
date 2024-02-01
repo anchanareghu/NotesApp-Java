@@ -13,10 +13,7 @@ import java.util.ArrayList;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewViewHolder> {
     ArrayList<String> notesList;
-    ArrayList<String> titleList;
-
     Context context;
-
 
     public RecyclerViewAdapter(ArrayList<String> notesList, Context context) {
         this.notesList = notesList;
@@ -25,7 +22,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewViewHo
 
     public void updateData(ArrayList<String> newNotesList) {
         this.notesList = newNotesList;
-
         notifyDataSetChanged();
     }
 
@@ -54,7 +50,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewViewHo
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Handle click event here
                 Intent intent = new Intent(context, NotesDetailActivity.class);
                 intent.putExtra("note_title", title);
                 intent.putExtra("note_content", note);

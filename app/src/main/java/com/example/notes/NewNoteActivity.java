@@ -16,7 +16,6 @@ public class NewNoteActivity extends Activity {
     EditText noteEditText;
     EditText titleEditText;
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +52,6 @@ public class NewNoteActivity extends Activity {
         editor.putStringSet("notes", notesSet);
         editor.apply();
 
-        // Finish the activity and return to the main activity
         finish();
     }
 
