@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
+import androidx.collection.ArraySet;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
@@ -44,9 +45,6 @@ public class MainActivity extends Activity {
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
 
-        SearchView searchView = findViewById(R.id.search_notes);
-
-
         add_note.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View add_view) {
@@ -54,11 +52,34 @@ public class MainActivity extends Activity {
                 startActivity(intent);
             }
         });
+
         AddImageOnClick addImageOnClick = new AddImageOnClick(new NewImageNoteActivity());
         add_image.setOnClickListener(addImageOnClick);
 
+        SearchView searchView = (SearchView) findViewById(R.id.search_notes);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                filter(newText);
+                return true;
+            }
+        });
     }
 
+    private void filter(String query) {
+        ArrayList<String> filteredList = new ArrayList<>();
+        for (String note : notesList) {
+            if (note.toLowerCase().contains(query.toLowerCase())) {
+                filteredList.add(note);
+            }
+        }
+        adapter.updateData(filteredList);
+    }
 
     private void loadNotes() {
         SharedPreferences preferences = getSharedPreferences("MyNotesPrefs", MODE_PRIVATE);
@@ -72,6 +93,7 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
         loadNotes();
-        adapter.updateData(notesList, titleList);
+        adapter.updateData(notesList);
     }
 }
+

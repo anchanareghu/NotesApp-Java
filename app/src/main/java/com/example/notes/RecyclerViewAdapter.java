@@ -23,9 +23,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewViewHo
         this.context = context;
     }
 
-    public void updateData(ArrayList<String> newNotesList, ArrayList<String> newTitleList) {
+    public void updateData(ArrayList<String> newNotesList) {
         this.notesList = newNotesList;
-        this.titleList = newTitleList;
+
         notifyDataSetChanged();
     }
 

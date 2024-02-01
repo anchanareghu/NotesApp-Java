@@ -37,7 +37,7 @@
         android:src="@drawable/baseline_archive_24" />
 
 
-    <TextView
+    <EditText
         android:id="@+id/saved_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -49,9 +49,9 @@
         android:textColorHint="@color/light_grey"
         android:textSize="30dp">
 
-    </TextView>
+    </EditText>
 
-    <TextView
+    <EditText
         android:id="@+id/saved_note"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -62,6 +62,6 @@
         android:textColorHint="@color/light_grey"
         android:textSize="24dp">
 
-    </TextView>
+    </EditText>
 
 </RelativeLayout>
