@@ -37,13 +37,14 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         View add_note = findViewById(R.id.add_button);
-        View add_image = findViewById(R.id.add_image);
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         adapter = new RecyclerViewAdapter(notesList, this);
         recyclerView.setAdapter(adapter);
 
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
+
+
 
         add_note.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,8 +54,7 @@ public class MainActivity extends Activity {
             }
         });
 
-        AddImageOnClick addImageOnClick = new AddImageOnClick(new NewImageNoteActivity());
-        add_image.setOnClickListener(addImageOnClick);
+
 
         SearchView searchView = (SearchView) findViewById(R.id.search_notes);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
