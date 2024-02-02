@@ -52,7 +52,6 @@ public class NewNoteActivity extends Activity {
         editor.putStringSet("notes", notesSet);
         editor.apply();
 
-        finish();
     }
 
     @Override

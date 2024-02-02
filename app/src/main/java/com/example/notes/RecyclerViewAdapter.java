@@ -1,7 +1,10 @@
 package com.example.notes;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,10 +13,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewViewHolder> {
     ArrayList<String> notesList;
     Context context;
+
 
     public RecyclerViewAdapter(ArrayList<String> notesList, Context context) {
         this.notesList = notesList;
@@ -56,11 +62,50 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewViewHo
                 context.startActivity(intent);
             }
         });
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                showConfirmationDialog( holder.getAdapterPosition());
+                return false;
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
         return notesList.size();
+    }
+    private void deleteNoteAt(int position) {
+        notesList.remove(position);
+        notifyItemRemoved(position);
+        saveNotesToSharedPreferences(); // Update SharedPreferences after deletion
+    }
+
+    private void saveNotesToSharedPreferences() {
+        SharedPreferences preferences = context.getSharedPreferences("MyNotesPrefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        Set<String> notesSet = new HashSet<>(notesList);
+        editor.putStringSet("notes", notesSet);
+        editor.apply();
+    }
+    private void showConfirmationDialog(final int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Confirm Delete");
+        builder.setMessage("Are you sure you want to delete this note?");
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                deleteNoteAt(position);
+            }
+        });
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }
 
