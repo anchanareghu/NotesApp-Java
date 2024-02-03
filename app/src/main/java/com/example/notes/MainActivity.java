@@ -68,6 +68,7 @@ public class MainActivity extends Activity {
     private void loadNotes() {
         SharedPreferences preferences = getSharedPreferences("MyNotesPrefs", MODE_PRIVATE);
         Set<String> defaultSet = new HashSet<>();
+        notesList.clear();
         notesList.addAll(preferences.getStringSet("notes", defaultSet));
     }
 
