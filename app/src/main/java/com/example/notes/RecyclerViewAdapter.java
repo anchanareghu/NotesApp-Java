@@ -20,6 +20,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewViewHo
     ArrayList<String> notesList;
     Context context;
 
+
     public RecyclerViewAdapter(ArrayList<String> notesList, Context context) {
         this.notesList = notesList;
         this.context = context;
@@ -37,6 +38,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewViewHo
         return new RecyclerViewViewHolder(view);
     }
 
+
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewViewHolder holder, int position) {
         String[] noteParts = notesList.get(position).split("\n");
@@ -49,31 +51,30 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewViewHo
             holder.notesTextView.setText(noteParts[0]);
         }
 
+        String title = noteParts[0];
+        String note = noteParts[1];
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, NotesDetailActivity.class);
-                intent.putExtra("note_title", noteParts[0]);
-                intent.putExtra("note_content", noteParts[1]);
+                intent.putExtra("note_title", title);
+                intent.putExtra("note_content", note);
                 context.startActivity(intent);
             }
         });
-                holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                showConfirmationDialog(holder.getAdapterPosition());
+                showConfirmationDialog( holder.getAdapterPosition());
                 return false;
             }
         });
     }
 
-
     @Override
     public int getItemCount() {
         return notesList.size();
     }
-
-
     private void deleteNoteAt(int position) {
         notesList.remove(position);
         notifyItemRemoved(position);
@@ -107,7 +108,3 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewViewHo
         dialog.show();
     }
 }
-
-
-
-

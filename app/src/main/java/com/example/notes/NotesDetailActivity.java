@@ -1,3 +1,5 @@
+
+
 package com.example.notes;
 
 import android.app.Activity;
@@ -8,8 +10,9 @@ import android.widget.EditText;
 
 
 public class NotesDetailActivity extends Activity {
-    EditText editTitle;
-    EditText editNote;
+    EditText editTitleView;
+    EditText editNoteView;
+    int notePosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,12 +22,14 @@ public class NotesDetailActivity extends Activity {
         Intent intent = getIntent();
         String title = intent.getStringExtra("note_title");
         String content = intent.getStringExtra("note_content");
+        notePosition = intent.getIntExtra("note_position", -1);
 
-        editTitle = (EditText) findViewById(R.id.saved_title);
-        editNote = (EditText) findViewById(R.id.saved_note);
+        editTitleView = (EditText) findViewById(R.id.saved_title);
+        editNoteView = (EditText) findViewById(R.id.saved_note);
 
-        editTitle.setText(title);
-        editNote.setText(content);
+        editTitleView.setText(title);
+        editNoteView.setText(content);
+
         View back_icon = findViewById(R.id.back);
         back_icon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -34,6 +39,5 @@ public class NotesDetailActivity extends Activity {
             }
         });
     }
+
 }
-
-
