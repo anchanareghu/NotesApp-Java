@@ -8,9 +8,8 @@ import android.widget.EditText;
 
 
 public class NotesDetailActivity extends Activity {
-    EditText editTitleView;
-    EditText editNoteView;
-    int notePosition;
+    EditText editTitle;
+    EditText editNote;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,14 +19,12 @@ public class NotesDetailActivity extends Activity {
         Intent intent = getIntent();
         String title = intent.getStringExtra("note_title");
         String content = intent.getStringExtra("note_content");
-        notePosition = intent.getIntExtra("note_position", -1);
 
-        editTitleView = (EditText) findViewById(R.id.saved_title);
-        editNoteView = (EditText) findViewById(R.id.saved_note);
+        editTitle = (EditText) findViewById(R.id.saved_title);
+        editNote = (EditText) findViewById(R.id.saved_note);
 
-        editTitleView.setText(title);
-        editNoteView.setText(content);
-
+        editTitle.setText(title);
+        editNote.setText(content);
         View back_icon = findViewById(R.id.back);
         back_icon.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -37,7 +34,6 @@ public class NotesDetailActivity extends Activity {
             }
         });
     }
-
 }
 
 

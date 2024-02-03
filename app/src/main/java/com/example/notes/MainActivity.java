@@ -17,35 +17,30 @@ import java.util.Set;
 
 
 public class MainActivity extends Activity {
-    private static final int EDIT_NOTE_REQUEST = 1;
-    static ArrayList<String> notesList;
-    static ArrayList<String> titleList;
+    ArrayList<String> notesList;
     RecyclerViewAdapter adapter;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        View add_note = findViewById(R.id.add_button);
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        notesList = new ArrayList<>();
+        loadNotes();
+
+        RecyclerView recyclerView = findViewById(R.id.recycler_view);
         adapter = new RecyclerViewAdapter(notesList, this);
         recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
 
-        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(layoutManager);
-
-
-        add_note.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.add_button).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View add_view) {
-                Intent intent = new Intent(add_view.getContext(), NewNoteActivity.class);
-                startActivity(intent);
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, NewNoteActivity.class));
             }
         });
 
-
-        SearchView searchView = (SearchView) findViewById(R.id.search_notes);
+        SearchView searchView = findViewById(R.id.search_notes);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -73,9 +68,7 @@ public class MainActivity extends Activity {
     private void loadNotes() {
         SharedPreferences preferences = getSharedPreferences("MyNotesPrefs", MODE_PRIVATE);
         Set<String> defaultSet = new HashSet<>();
-        Set<String> defaultTitleSet = new HashSet<>();
-        notesList = new ArrayList<>(preferences.getStringSet("notes", defaultSet));
-        titleList = new ArrayList<>(preferences.getStringSet("title", defaultTitleSet));
+        notesList.addAll(preferences.getStringSet("notes", defaultSet));
     }
 
     @Override
@@ -84,6 +77,5 @@ public class MainActivity extends Activity {
         loadNotes();
         adapter.updateData(notesList);
     }
-
 }
 
