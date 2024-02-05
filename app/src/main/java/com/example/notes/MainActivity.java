@@ -18,7 +18,6 @@ import java.util.Set;
 
 
 public class MainActivity extends Activity {
-    private static final int EDIT_NOTE_REQUEST = 1;
     static ArrayList<String> notesList;
     static ArrayList<String> titleList;
     RecyclerViewAdapter adapter;
