@@ -19,7 +19,6 @@
             android:layout_height="wrap_content"
             android:padding="12dp"
             android:textSize="20sp"
-            android:background="@color/lemon"
             android:textFontWeight="500"
             android:text="Title" />
 
@@ -27,7 +26,6 @@
             android:id="@+id/notesItemView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/lemon"
             android:padding="12dp"
             android:scaleType="center"
             android:text="hi !! i am Anchana" />

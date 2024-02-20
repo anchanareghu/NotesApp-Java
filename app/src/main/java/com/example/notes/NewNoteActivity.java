@@ -13,8 +13,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class NewNoteActivity extends Activity {
-    EditText noteEditText;
-    EditText titleEditText;
+    static EditText noteEditText;
+    static EditText titleEditText;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

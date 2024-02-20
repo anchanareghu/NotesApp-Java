@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import java.util.Set;
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewViewHolder> {
     ArrayList<String> notesList;
     Context context;
+    int [] colors={Color.parseColor("#FFB996"),Color.parseColor("#FDFFAB"),Color.parseColor("#D9EDBF")};
 
 
     public RecyclerViewAdapter(ArrayList<String> notesList, Context context) {
@@ -42,6 +44,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewViewHo
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewViewHolder holder, int position) {
         String[] noteParts = notesList.get(position).split("\n");
+        int color = colors[position% colors.length];
+        holder.cardView.setCardBackgroundColor(color);
 
         if (noteParts.length >= 2) {
             holder.titleTextView.setText(noteParts[0]);
@@ -50,6 +54,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewViewHo
             holder.titleTextView.setText("");
             holder.notesTextView.setText(noteParts[0]);
         }
+
 
         String title = noteParts[0];
         String note = noteParts[1];
