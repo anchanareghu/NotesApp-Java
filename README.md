@@ -14,7 +14,7 @@ The Notes App is a simple Android application that allows users to create, view 
 6. **Delete note**: Users can delete notes individually, with a confirmation alert to prevent accidental deletions.
 
 ### Screenshots
-<img src="app/src/main/res/drawable/screenshot01.PNG" width="200" /> <img src="app/src/main/res/drawable/screenshot03.png" width="200" />  <img src="app/src/main/res/drawable/screenshot02.png" width="200" />  <img src="app/src/main/res/drawable/screenshot04.png" width="200" />
+<img src="app/src/main/res/drawable/screenshot01.PNG" width="200" /> <img src="app/src/main/res/drawable/screenshot02.png" width="200" />  <img src="app/src/main/res/drawable/screenshot03.png" width="200" />  <img src="app/src/main/res/drawable/screenshot04.png" width="200" />
 
 
 ### Usage
