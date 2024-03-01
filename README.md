@@ -4,6 +4,13 @@
 
 The Notes App is a simple Android application that allows users to create, view, edit and delete their notes and find notes by searching for specific keywords.
 
+### Dependencies
+
+The Notes App utilizes the following dependencies:
+
+- ***RecyclerView***: For displaying the list of notes.
+- ***SharedPreferences***: For storing and retrieving notes locally.
+
 ### Features
 
 1. **Create Notes**: Users can create new notes by typing their content into the app.
@@ -27,10 +34,4 @@ The Notes App is a simple Android application that allows users to create, view,
 5. **Delete note**: To delete a note, long click the note and confirm the deletion in the confirmation alert.
 
 
-### Dependencies
-
-The Notes App utilizes the following dependencies:
-
-- RecyclerView: For displaying the list of notes.
-- SharedPreferences: For storing and retrieving notes locally.
 
