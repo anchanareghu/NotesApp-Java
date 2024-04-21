@@ -4,34 +4,32 @@
 
 The Notes App is a simple Android application that allows users to create, view, edit and delete their notes and find notes by searching for specific keywords.
 
-### Dependencies
+## Features
 
-The Notes App utilizes the following dependencies:
+- **Create Notes**: Users can create new notes by providing a title and content for the note.
+- **Edit Notes**: Existing notes can be edited to update their title and content.
+- **Delete Notes**: Users can delete individual notes they no longer need.
+- **Search Notes**: The app provides a search functionality to filter notes based on title or content.
+- **Persistent Storage**: Notes are stored locally on the device using the Room Database, ensuring data persistence even when the app is closed.
 
-- ***RecyclerView***: For displaying the list of notes.
-- ***SharedPreferences***: For storing and retrieving notes locally.
+## Technologies Used
 
-### Features
+- **Android SDK**: The app is developed using Java/Kotlin programming language and the Android SDK.
+- **Room Database**: Room is utilized as the database framework, offering an abstraction layer over SQLite. It provides an easy-to-use interface for database operations, including CRUD (Create, Read, Update, Delete) operations, and supports LiveData for observing database changes.
+- **RecyclerView**: RecyclerView is used to display the list of notes efficiently. It dynamically loads and recycles views as the user scrolls through the list, improving performance and memory efficiency.
+- **SearchView**: SearchView widget is integrated to implement search functionality, allowing users to quickly find notes based on their title or content.
+- **Material Components**: Material Design components are used for UI elements, ensuring a modern and consistent look and feel across different Android devices.
 
-1. **Create Notes**: Users can create new notes by typing their content into the app.
-2. **View Notes**: Users can view the details of each note by clicking on the note in the list.
-3. **Edit Notes**: Users can update the content of their notes whenever necessary, ensuring that their information remains accurate and relevant over time.
-4. **Save Notes**: Notes are saved locally and persist even when the app is closed.
-5. **Search Functionality**: Quickly find notes by searching for specific keywords.
-6. **Simple User Interface**: The app provides a user-friendly interface for managing notes.
-7. **Delete note**: Users can delete notes individually, with a confirmation alert to prevent accidental deletions.
+## Usage
+
+1. Launch the app on your Android device.
+2. Tap on the "+" button to create a new note.
+3. Enter a title and content for the note, then tap on the save button.
+4. To edit an existing note, tap on the note in the list, make your changes, and then save.
+5. To delete a note, long-press on the note in the list and confirm deletion.
+6. Use the search bar to filter notes based on title or content.
+
 
 ### Screenshots
-<img src="app/src/main/res/drawable/screenshot01.PNG" width="200" /> <img src="app/src/main/res/drawable/screenshot02.png" width="200" />  <img src="app/src/main/res/drawable/screenshot03.png" width="200" />  <img src="app/src/main/res/drawable/screenshot04.png" width="200" />
-
-
-### Usage
-
-1. **Create a New Note**: Click on the "+" icon to create a new note. Enter the title and content of the note, then save it.
-2. **View Note Details**: Click on a note in the list to view its details, including the title and content.
-3. **Save Notes**: Notes are automatically saved when created or updated. They persist even if the app is closed or restarted.
-4. **Search Functionality**: Quickly find notes by searching for specific keywords.
-5. **Delete note**: To delete a note, long click the note and confirm the deletion in the confirmation alert.
-
-
+<img src="app/src/main/res/drawable/screenshot02.png" width="200" /> <img src="app/src/main/res/drawable/screenshot03.png" width="200" />  <img src="app/src/main/res/drawable/screenshot04.png" width="200" />  <img src="app/src/main/res/drawable/screenshot05.png" width="200" />
 
