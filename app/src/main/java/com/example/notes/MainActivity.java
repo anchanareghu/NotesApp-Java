@@ -1,51 +1,52 @@
 
 package com.example.notes;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.SearchView;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
+import java.util.Objects;// MainActivity.java
 
-
-public class MainActivity extends Activity {
-    static ArrayList<String> notesList;
-    static ArrayList<String> titleList;
-    RecyclerViewAdapter adapter;
+public class MainActivity extends AppCompatActivity {
+    private NotesDatabase notesDatabase;
+    private RecyclerViewAdapter adapter;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        View add_note = findViewById(R.id.add_button);
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        adapter = new RecyclerViewAdapter(notesList, this);
-        recyclerView.setAdapter(adapter);
-
+        RecyclerView recyclerView = findViewById(R.id.recycler_view);
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(layoutManager);
 
+        notesDatabase = NotesDatabase.getDatabase(this);
 
-        add_note.setOnClickListener(new View.OnClickListener() {
+        adapter = new RecyclerViewAdapter(this, notesDatabase);
+        recyclerView.setAdapter(adapter);
+
+        loadNotes();
+
+        getSupportActionBar().hide();
+
+        findViewById(R.id.add_button).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View add_view) {
-                Intent intent = new Intent(add_view.getContext(), NewNoteActivity.class);
-                startActivity(intent);
+            public void onClick(View v) {
+                startActivityForResult(new Intent(MainActivity.this, NewNoteActivity.class), 1);
             }
         });
 
-
-        SearchView searchView = (SearchView) findViewById(R.id.search_notes);
+        SearchView searchView = findViewById(R.id.search_notes);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -61,28 +62,35 @@ public class MainActivity extends Activity {
     }
 
     private void filter(String query) {
-        ArrayList<String> filteredList = new ArrayList<>();
-        for (String note : notesList) {
-            if (note.toLowerCase().contains(query.toLowerCase())) {
-                filteredList.add(note);
+        notesDatabase.noteDao().searchNotes("%" + query + "%").observe(this, new Observer<List<Note>>() {
+            @Override
+            public void onChanged(List<Note> notes) {
+                adapter.setData(notes);
             }
-        }
-        adapter.updateData(filteredList);
+        });
     }
 
     private void loadNotes() {
-        SharedPreferences preferences = getSharedPreferences("MyNotesPrefs", MODE_PRIVATE);
-        Set<String> defaultSet = new HashSet<>();
-        Set<String> defaultTitleSet = new HashSet<>();
-        notesList = new ArrayList<>(preferences.getStringSet("notes", defaultSet));
-        titleList = new ArrayList<>(preferences.getStringSet("title", defaultTitleSet));
+        notesDatabase.noteDao().getAllNotes().observe(this, new Observer<List<Note>>() {
+            @Override
+            public void onChanged(List<Note> notes) {
+                adapter.setData(notes);
+            }
+        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         loadNotes();
-        adapter.updateData(notesList);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1 && resultCode == RESULT_OK && data != null) {
+            loadNotes();
+        }
     }
 
 }

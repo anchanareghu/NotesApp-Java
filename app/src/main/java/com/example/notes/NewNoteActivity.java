@@ -1,64 +1,65 @@
 package com.example.notes;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 
-import androidx.annotation.Nullable;
-
-import java.util.HashSet;
-import java.util.Set;
-
-public class NewNoteActivity extends Activity {
-    static EditText noteEditText;
-    static EditText titleEditText;
+import androidx.appcompat.app.AppCompatActivity;// NewNoteActivity.java
+public class NewNoteActivity extends AppCompatActivity {
+    private EditText noteEditText;
+    private EditText titleEditText;
+    private NotesDatabase notesDatabase;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_notes);
 
+        getSupportActionBar().hide();
 
         View back_icon = findViewById(R.id.back);
         back_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View backButton) {
-                Intent intent = new Intent(backButton.getContext(), MainActivity.class);
-                startActivity(intent);
+                onBackPressed();
             }
         });
+
         noteEditText = findViewById(R.id.note);
         titleEditText = findViewById(R.id.title);
+        notesDatabase = NotesDatabase.getDatabase(this);
+
     }
 
     private void saveNote() {
         String note = noteEditText.getText().toString();
         String title = titleEditText.getText().toString();
 
-        // Load existing notes
-        SharedPreferences preferences = getSharedPreferences("MyNotesPrefs", MODE_PRIVATE);
-        Set<String> defaultSet = new HashSet<>();
-        Set<String> notesSet = new HashSet<>(preferences.getStringSet("notes", defaultSet));
+        Note newNote = new Note();
+        newNote.setTitle(title);
+        newNote.setContent(note);
 
-        // Add new note
-        String newNote = title + "\n" + note;
-        notesSet.add(newNote);
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                notesDatabase.noteDao().insert(newNote);
+                return null;
+            }
 
-        // Save updated notes
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putStringSet("notes", notesSet);
-        editor.apply();
-
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                setResult(RESULT_OK);
+                finish();
+            }
+        }.execute();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         saveNote();
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
     }
 }

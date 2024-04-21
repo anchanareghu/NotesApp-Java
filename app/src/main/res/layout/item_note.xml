@@ -14,20 +14,23 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/titleItemView"
+            android:id="@+id/titleTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="12dp"
-            android:textSize="20sp"
+            android:text="Title"
+            android:textColor="@color/grey"
             android:textFontWeight="500"
-            android:text="Title" />
+            android:textSize="20sp" />
 
         <TextView
-            android:id="@+id/notesItemView"
+            android:id="@+id/contentTextView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="12dp"
             android:scaleType="center"
-            android:text="hi !! i am Anchana" />
+            android:textColor="@color/grey"
+            android:text="hi !! i am Anchana"
+             />
     </LinearLayout>
 </androidx.cardview.widget.CardView>

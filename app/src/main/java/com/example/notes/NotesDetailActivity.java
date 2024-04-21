@@ -1,73 +1,86 @@
-
-
 package com.example.notes;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 
-import java.util.HashSet;
-import java.util.Set;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 
-
-public class NotesDetailActivity extends Activity {
-    EditText editTitleView;
-    EditText editNoteView;
-    int notePosition;
+public class NotesDetailActivity extends AppCompatActivity {
+    private EditText editTitleView;
+    private EditText editNoteView;
+    private int noteId;
+    private NotesDatabase notesDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_notes_details);
+        setContentView(R.layout.layout_notes);
+        getSupportActionBar().hide();
+
+        editTitleView = findViewById(R.id.title);
+        editNoteView = findViewById(R.id.note);
+        notesDatabase = NotesDatabase.getDatabase(this);
 
         Intent intent = getIntent();
-        String title = intent.getStringExtra("note_title");
-        String content = intent.getStringExtra("note_content");
-        notePosition = intent.getIntExtra("note_position", -1);
+        noteId = intent.getIntExtra("note_id", -1);
 
-        editTitleView = (EditText) findViewById(R.id.saved_title);
-        editNoteView = (EditText) findViewById(R.id.saved_note);
-
-        editTitleView.setText(title);
-        editNoteView.setText(content);
+        loadNote();
 
         View back_icon = findViewById(R.id.back);
         back_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View backButton) {
-                Intent intent = new Intent(backButton.getContext(), MainActivity.class);
-                startActivity(intent);
+                onBackPressed();
             }
         });
-    } private void saveNote() {
-        String note = editNoteView.getText().toString();
+
+    }
+
+    private void loadNote() {
+        notesDatabase.noteDao().getNoteById(noteId).observe(this, new Observer<Note>() {
+            @Override
+            public void onChanged(Note note) {
+                if (note != null) {
+                    editTitleView.setText(note.getTitle());
+                    editNoteView.setText(note.getContent());
+                }
+            }
+        });
+    }
+
+    private void saveNote() {
         String title = editTitleView.getText().toString();
+        String content = editNoteView.getText().toString();
 
-        // Load existing notes
-        SharedPreferences preferences = getSharedPreferences("MyNotesPrefs", MODE_PRIVATE);
-        Set<String> defaultSet = new HashSet<>();
-        Set<String> notesSet = new HashSet<>(preferences.getStringSet("notes", defaultSet));
+        Note updatedNote = new Note();
+        updatedNote.setId(noteId);
+        updatedNote.setTitle(title);
+        updatedNote.setContent(content);
 
-        // Add new note
-        String newNote = title + "\n" + note;
-        notesSet.add(newNote);
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                notesDatabase.noteDao().update(updatedNote);
+                return null;
+            }
 
-        // Save updated notes
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putStringSet("notes", notesSet);
-        editor.apply();
-
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                setResult(RESULT_OK);
+                finish();
+            }
+        }.execute();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         saveNote();
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
     }
-
 }

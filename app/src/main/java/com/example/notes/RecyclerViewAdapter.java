@@ -4,105 +4,125 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Color;
+import android.os.AsyncTask;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewViewHolder> {
-    ArrayList<String> notesList;
-    Context context;
-    int [] colors={Color.parseColor("#FFB996"),Color.parseColor("#FDFFAB"),Color.parseColor("#D9EDBF")};
+public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
+    private List<Note> notes = new ArrayList<>();
+    private final Context context;
+    private final NotesDatabase notesDatabase;
+    private int colorIndex = 0;
 
 
-    public RecyclerViewAdapter(ArrayList<String> notesList, Context context) {
-        this.notesList = notesList;
+    public RecyclerViewAdapter(Context context, NotesDatabase notesDatabase) {
         this.context = context;
-    }
-
-    public void updateData(ArrayList<String> newNotesList) {
-        this.notesList = newNotesList;
-        notifyDataSetChanged();
+        this.notesDatabase = notesDatabase;
     }
 
     @NonNull
     @Override
-    public RecyclerViewViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_recyclerview_edittext, parent, false);
-        return new RecyclerViewViewHolder(view);
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_note, parent, false);
+        return new ViewHolder(view);
     }
 
-
     @Override
-    public void onBindViewHolder(@NonNull RecyclerViewViewHolder holder, int position) {
-        String[] noteParts = notesList.get(position).split("\n");
-        int color = colors[position% colors.length];
-        holder.cardView.setCardBackgroundColor(color);
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        Note note = notes.get(position);
+        holder.titleTextView.setText(note.getTitle());
+        holder.contentTextView.setText(note.getContent());
 
-        if (noteParts.length >= 2) {
-            holder.titleTextView.setText(noteParts[0]);
-            holder.notesTextView.setText(noteParts[1]);
-        } else {
-            holder.titleTextView.setText("");
-            holder.notesTextView.setText(noteParts[0]);
-        }
-
-
-        String title = noteParts[0];
-        String note = noteParts[1];
+        holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, getRandomColor()));
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, NotesDetailActivity.class);
-                intent.putExtra("note_title", title);
-                intent.putExtra("note_content", note);
+                intent.putExtra("note_id", note.getId());
                 context.startActivity(intent);
             }
         });
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                showConfirmationDialog( holder.getAdapterPosition());
-                return false;
+                showConfirmationDialog(note.getId());
+                return true;
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return notesList.size();
-    }
-    private void deleteNoteAt(int position) {
-        notesList.remove(position);
-        notifyItemRemoved(position);
-        saveNotesToSharedPreferences(); // Update SharedPreferences after deletion
+        return notes.size();
     }
 
-    private void saveNotesToSharedPreferences() {
-        SharedPreferences preferences = context.getSharedPreferences("MyNotesPrefs", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        Set<String> notesSet = new HashSet<>(notesList);
-        editor.putStringSet("notes", notesSet);
-        editor.apply();
+    public void setData(List<Note> notes) {
+        this.notes = notes;
+        notifyDataSetChanged();
     }
-    private void showConfirmationDialog(final int position) {
+
+    public int getRandomColor() {
+        int[] colors = {R.color.peach, R.color.lemon, R.color.sage, R.color.orange};
+        int color = colors[colorIndex];
+        colorIndex = (colorIndex + 1) % colors.length;
+        return color;
+    }
+
+
+    private void deleteNoteById(int noteId) {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                notesDatabase.noteDao().deleteById(noteId);
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+                try {
+                    loadNotes();
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                } catch (InstantiationException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }.execute();
+    }
+
+    private void loadNotes() throws IllegalAccessException, InstantiationException {
+        notesDatabase.noteDao().getAllNotes().observe(MainActivity.class.newInstance(), new Observer<List<Note>>() {
+            @Override
+            public void onChanged(List<Note> notes) {
+                setData(notes);
+            }
+        });
+    }
+
+    private void showConfirmationDialog(final int noteId) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Confirm Delete");
         builder.setMessage("Are you sure you want to delete this note?");
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                deleteNoteAt(position);
+                deleteNoteById(noteId);
             }
         });
+
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -111,5 +131,19 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewViewHo
         });
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        CardView cardView;
+        TextView titleTextView;
+        TextView contentTextView;
+
+        ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            titleTextView = itemView.findViewById(R.id.titleTextView);
+            contentTextView = itemView.findViewById(R.id.contentTextView);
+            cardView = itemView.findViewById(R.id.cardView);
+
+        }
     }
 }
