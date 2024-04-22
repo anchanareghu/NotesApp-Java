@@ -4,9 +4,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
 
-import androidx.appcompat.app.AppCompatActivity;// NewNoteActivity.java
+import androidx.appcompat.app.AppCompatActivity;
 public class NewNoteActivity extends AppCompatActivity {
     private EditText noteEditText;
     private EditText titleEditText;

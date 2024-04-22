@@ -2,7 +2,6 @@
 package com.example.notes;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.SearchView;
@@ -13,9 +12,7 @@ import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;// MainActivity.java
 
 public class MainActivity extends AppCompatActivity {
     private NotesDatabase notesDatabase;
