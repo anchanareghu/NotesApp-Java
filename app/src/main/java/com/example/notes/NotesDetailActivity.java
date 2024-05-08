@@ -5,21 +5,28 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
+
+import java.util.Objects;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class NotesDetailActivity extends AppCompatActivity {
     private EditText editTitleView;
     private EditText editNoteView;
     private int noteId;
     private NotesDatabase notesDatabase;
+    private final Executor executor = Executors.newSingleThreadExecutor();
+    private Note currentNote;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_notes);
-        getSupportActionBar().hide();
+        Objects.requireNonNull(getSupportActionBar()).hide();
 
         editTitleView = findViewById(R.id.title);
         editNoteView = findViewById(R.id.note);
@@ -37,7 +44,6 @@ public class NotesDetailActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
-
     }
 
     private void loadNote() {
@@ -47,39 +53,45 @@ public class NotesDetailActivity extends AppCompatActivity {
                 if (note != null) {
                     editTitleView.setText(note.getTitle());
                     editNoteView.setText(note.getContent());
+                    currentNote = note;
                 }
             }
         });
     }
 
-    private void saveNote() {
+    private void saveNoteIfChanged() {
+        String note = editNoteView.getText().toString();
         String title = editTitleView.getText().toString();
-        String content = editNoteView.getText().toString();
 
-        Note updatedNote = new Note();
-        updatedNote.setId(noteId);
-        updatedNote.setTitle(title);
-        updatedNote.setContent(content);
+        if (currentNote != null && (!currentNote.getTitle().equals(title) || !currentNote.getContent().equals(note))) {
+            Note newNote = new Note();
+            newNote.setId(noteId);
+            newNote.setTitle(title);
+            newNote.setContent(note);
 
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                notesDatabase.noteDao().update(updatedNote);
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-                setResult(RESULT_OK);
-                finish();
-            }
-        }.execute();
+            executor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    notesDatabase.noteDao().update(newNote);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            setResult(RESULT_OK);
+                            finish();
+                        }
+                    });
+                }
+            });
+        } else {
+            setResult(RESULT_CANCELED);
+            finish();
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        saveNote();
+        saveNoteIfChanged();
     }
 }
+
