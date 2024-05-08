@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/newsDetailScreen"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/navy">
 
     <RelativeLayout
         android:id="@+id/topBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/sage"
         android:padding="8dp">
 
         <ImageView
@@ -26,6 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/topBar"
         android:layout_marginTop="15dp"
+        android:autofillHints="spell-check"
         android:background="@null"
         android:hint="@string/title"
         android:paddingStart="15dp"
@@ -42,6 +44,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/title"
+        android:autofillHints="spell-check"
         android:background="@null"
         android:hint="@string/note"
         android:paddingStart="15dp"

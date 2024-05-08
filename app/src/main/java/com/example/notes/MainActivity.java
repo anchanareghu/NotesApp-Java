@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import java.util.List;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
     private NotesDatabase notesDatabase;
@@ -34,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
         loadNotes();
 
-        getSupportActionBar().hide();
+        Objects.requireNonNull(getSupportActionBar()).hide();
 
         findViewById(R.id.add_button).setOnClickListener(new View.OnClickListener() {
             @Override

@@ -14,7 +14,6 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/Theme.AppCompat.DayNight">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,14 +24,12 @@
         <activity
             android:name=".NewNoteActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar">
 
         </activity>
         <activity
             android:name=".NotesDetailActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar">
 
         </activity>

@@ -4,7 +4,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,12 +19,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
     private List<Note> notes = new ArrayList<>();
     private final Context context;
     private final NotesDatabase notesDatabase;
-    private int colorIndex = 0;
+    private static int colorIndex = 0;
+    private final Executor executor = Executors.newSingleThreadExecutor();
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
 
 
     public RecyclerViewAdapter(Context context, NotesDatabase notesDatabase) {
@@ -72,34 +77,29 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         notifyDataSetChanged();
     }
 
-    public int getRandomColor() {
-        int[] colors = {R.color.peach, R.color.lemon, R.color.sage, R.color.orange};
+    public static int getRandomColor() {
+        int[] colors = {R.color.pink, R.color.navy, R.color.purple};
         int color = colors[colorIndex];
         colorIndex = (colorIndex + 1) % colors.length;
         return color;
     }
-
-
     private void deleteNoteById(int noteId) {
-        new AsyncTask<Void, Void, Void>() {
+        executor.execute(new Runnable() {
             @Override
-            protected Void doInBackground(Void... voids) {
+            public void run() {
                 notesDatabase.noteDao().deleteById(noteId);
-                return null;
+                mainHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            loadNotes();
+                        } catch (IllegalAccessException | InstantiationException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                });
             }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-                try {
-                    loadNotes();
-                } catch (IllegalAccessException e) {
-                    throw new RuntimeException(e);
-                } catch (InstantiationException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }.execute();
+        });
     }
 
     private void loadNotes() throws IllegalAccessException, InstantiationException {
