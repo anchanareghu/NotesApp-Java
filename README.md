@@ -25,7 +25,7 @@ The Notes App is a simple Android application that allows users to create, view,
 1. Launch the app on your Android device.
 2. Tap on the "+" button to create a new note.
 3. Enter a title and content for the note, then tap on the save button.
-4. To edit an existing note, tap on the note in the list, make your changes, and then save.
+4. To edit an existing note, tap on the note in the list, make your changes, and the note gets updated.
 5. To delete a note, long-press on the note in the list and confirm deletion.
 6. Use the search bar to filter notes based on title or content.
 
